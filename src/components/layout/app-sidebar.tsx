@@ -5,13 +5,12 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 import { SidebarMenuItem } from './sidebar-menu-item'
 
 import { Logo } from '@/components/icons/Logo'
-import { Home, Blocks, UsersRound, Bookmark, FileBox, CircleHelp } from "lucide-react"
+import { Home, Blocks, UsersRound, Bookmark, FileBox } from "lucide-react"
 
   
   export function AppSidebar() {
