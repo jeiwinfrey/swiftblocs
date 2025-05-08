@@ -9,16 +9,15 @@ import {
 
 import { SidebarMenuItem } from './sidebar-menu-item'
 
-import { Logo } from '@/components/icons/Logo'
 import { Home, Blocks, UsersRound, Bookmark, FileBox } from "lucide-react"
 
   
   export function AppSidebar() {
     return (
       <Sidebar style={{ borderRight: '1px solid var(--sidebar-border)' }}>
-        <SidebarHeader style={{ padding: '8px' }}>
+        <SidebarHeader style={{ padding: '8px', borderBottom: '1px solid var(--sidebar-border)' }}>
           <div style={{ padding: '4px 8px 8px 8px' }}>
-            <Logo />
+            <span>swiftblocs</span>
           </div>
         </SidebarHeader>
 
