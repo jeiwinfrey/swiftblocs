@@ -6,7 +6,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <main>
-        <SidebarTrigger />
         <p>THIS MAIN IS WHERE MAIN PAGE GOES?</p>
         {children}
       </main>
