@@ -1,31 +1,15 @@
-'use client';
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/layout/app-sidebar"
 
-import { useAppStore } from '../../../store/useAppStore';
-
-export default function Page() {
-  const { count, increment, decrement } = useAppStore();
-  
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6">
-      <h1 className="text-4xl font-bold">SwiftBlocs App is working -Jeiwinfrey!</h1>
-      
-      <div className="flex flex-col items-center gap-4">
-        <p className="text-2xl">Counter: {count}</p>
-        <div className="flex gap-4">
-          <button 
-            onClick={decrement}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-          >
-            Decrement
-          </button>
-          <button 
-            onClick={increment}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Increment
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        <p>THIS MAIN IS WHERE MAIN PAGE GOES?</p>
+        {children}
+      </main>
+    </SidebarProvider>
+  )
 }
