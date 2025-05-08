@@ -24,15 +24,15 @@ import { Home, Blocks, UsersRound, Bookmark, FileBox } from "lucide-react"
         <SidebarContent>
           <SidebarGroup style={{ padding: '8px 8px 8px 12px' }}>
           <SidebarGroupLabel><p>Browse</p></SidebarGroupLabel>
-            <SidebarMenuItem icon={Home} label="Home" />
-            <SidebarMenuItem icon={Blocks} label="Components" />
-            <SidebarMenuItem icon={UsersRound} label="Creators" />
+            <SidebarMenuItem icon={Home} label="Home" value="home" />
+            <SidebarMenuItem icon={Blocks} label="Components" value="components" />
+            <SidebarMenuItem icon={UsersRound} label="Creators" value="creators" />
           </SidebarGroup>
 
           <SidebarGroup style={{ padding: '8px 8px 8px 12px' }}>
           <SidebarGroupLabel><p>You</p></SidebarGroupLabel>
-            <SidebarMenuItem icon={FileBox} label="Submissions" />
-            <SidebarMenuItem icon={Bookmark} label="Bookmarks" />
+            <SidebarMenuItem icon={FileBox} label="Submissions" value="submissions" />
+            <SidebarMenuItem icon={Bookmark} label="Bookmarks" value="bookmarks" />
           </SidebarGroup>
         </SidebarContent>
 
