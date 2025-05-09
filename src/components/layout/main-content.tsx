@@ -1,14 +1,12 @@
-"use client"
-
-import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/layout/app-sidebar"
+import { useSidebar } from "@/components/ui/sidebar"
+import { useState } from "react"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState } from "react"
 
-function MainContent({ children }: { children: React.ReactNode }) {
-  const { open, activeItem } = useSidebar();
+export function MainContent() {
+  const { activeItem } = useSidebar();
   const [isLoggedIn] = useState(true); // Set to false or true
   
   return (
@@ -20,8 +18,6 @@ function MainContent({ children }: { children: React.ReactNode }) {
         minWidth: 0, 
         overflow: "auto",
         transition: "all 0.2s ease-in-out",
-        paddingLeft: !open ? "0.5rem" : "0",
-        paddingRight: !open ? "1rem" : "0.5rem"
       }}
     >
       <div style={{ borderBottom: "1px solid var(--sidebar-border)", padding: "2px", width: "100%" }}>
@@ -60,16 +56,5 @@ function MainContent({ children }: { children: React.ReactNode }) {
         }
       </div>
     </main>
-  );
-}
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <SidebarProvider>
-      <div style={{ display: "flex", width: "100%", height: "100vh", overflow: "hidden" }}>
-        <AppSidebar />
-        <MainContent>{children}</MainContent>
-      </div>
-    </SidebarProvider>
   );
 }
