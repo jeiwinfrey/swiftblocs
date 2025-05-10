@@ -1,3 +1,5 @@
+"use client"
+
 import { useSidebar } from "@/components/ui/sidebar"
 import { useState } from "react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -6,11 +8,11 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { UserAvatar } from "@/components/layout/user-avatar"
 import dynamic from "next/dynamic"
 
-// Dynamically import page components
-const HomePage = dynamic(() => import('@/app/(main)/home/page'))
-const ComponentsPage = dynamic(() => import('@/app/(main)/components/page'))
-const CreatorsPage = dynamic(() => import('@/app/(main)/creators/page'))
-const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'))
+// Dynamically import page components with suspense and ssr disabled for async server components
+const HomePage = dynamic(() => import('@/app/(main)/home/page'), { ssr: false, loading: () => <div>Loading home page...</div> })
+const ComponentsPage = dynamic(() => import('@/app/(main)/components/page'), { ssr: false, loading: () => <div>Loading components page...</div> })
+const CreatorsPage = dynamic(() => import('@/app/(main)/creators/page'), { ssr: false, loading: () => <div>Loading creators page...</div> })
+const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'), { ssr: false, loading: () => <div>Loading profile page...</div> })
 
 export function AppHeader() {
   const { activeItem } = useSidebar();

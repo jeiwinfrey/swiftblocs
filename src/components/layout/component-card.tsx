@@ -21,15 +21,15 @@ export function ComponentCard({
     className = "",
 }: ComponentCardProps = {}) {
     return (
-        <Card variant="inner" className={`max-w-[400px] bg-background overflow-hidden ${className}`}>
+        <Card variant="inner" className={`max-w-[400px] bg-background overflow-hidden rounded-md ${className}`}>
             {/* Component Preview Image */}
-            <div className="relative w-full h-40 bg-muted">
+            <div className="relative w-full h-40 bg-muted rounded-sm">
                 {imageUrl ? (
                     <Image 
                         src={imageUrl} 
                         alt={componentTitle} 
                         fill
-                        className="object-cover"
+                        className="object-cover rounded-sm"
                     />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">
@@ -41,9 +41,9 @@ export function ComponentCard({
             {/* Component Info */}
             <div>
                 {/* Author, Views and Bookmarks */}
-                <div className="flex items-center justify-between">
+                <div className="pt-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Avatar className="size-6">
+                        <Avatar className="size-8">
                             {authorAvatar ? (
                                 <AvatarImage src={authorAvatar} alt={componentTitle} />
                             ) : (
