@@ -1,21 +1,13 @@
 "use client"
 
-import { useSidebar } from "@/components/ui/sidebar"
 import { useState } from "react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserAvatar } from "@/components/layout/user-avatar"
-import dynamic from "next/dynamic"
-
-// Dynamically import page components with suspense and ssr disabled for async server components
-const HomePage = dynamic(() => import('@/app/(main)/home/page'), { ssr: false, loading: () => <div>Loading home page...</div> })
-const ComponentsPage = dynamic(() => import('@/app/(main)/components/page'), { ssr: false, loading: () => <div>Loading components page...</div> })
-const CreatorsPage = dynamic(() => import('@/app/(main)/creators/page'), { ssr: false, loading: () => <div>Loading creators page...</div> })
-const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'), { ssr: false, loading: () => <div>Loading profile page...</div> })
+import { ContentRouter } from "./routing"
 
 export function AppHeader() {
-  const { activeItem } = useSidebar();
   const [isLoggedIn] = useState(false); // Set to false or true
   
   return (
@@ -52,15 +44,7 @@ export function AppHeader() {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, overflow: "auto", padding: "16px" }}>
-        {(activeItem === "home" && <HomePage />) ||
-          (activeItem === "components" && <ComponentsPage />) ||
-          (activeItem === "creators" && <CreatorsPage />) ||
-          (activeItem === "submissions" && <ProfilePage />) ||
-          (activeItem === "bookmarks" && <ProfilePage />) ||
-          <div>Content not found</div>
-        }
-      </div>
+      <ContentRouter />
     </main>
   );
 }
