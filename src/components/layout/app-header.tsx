@@ -4,6 +4,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserAvatar } from "@/components/layout/user-avatar"
+import dynamic from "next/dynamic"
+
+// Dynamically import page components
+const HomePage = dynamic(() => import('@/app/(main)/home/page'))
+const ComponentsPage = dynamic(() => import('@/app/(main)/components/page'))
+const CreatorsPage = dynamic(() => import('@/app/(main)/creators/page'))
+const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'))
 
 export function AppHeader() {
   const { activeItem } = useSidebar();
@@ -44,11 +51,11 @@ export function AppHeader() {
         </div>
       </div>
       <div style={{ flex: 1, overflow: "auto", padding: "16px" }}>
-        {(activeItem === "home" && <div>Welcome to swiftblocs!</div>) ||
-          (activeItem === "components" && <div>Components page</div>) ||
-          (activeItem === "creators" && <div>Creators page</div>) ||
-          (activeItem === "submissions" && <div>Submissions page</div>) ||
-          (activeItem === "bookmarks" && <div>Bookmarks page</div>) ||
+        {(activeItem === "home" && <HomePage />) ||
+          (activeItem === "components" && <ComponentsPage />) ||
+          (activeItem === "creators" && <CreatorsPage />) ||
+          (activeItem === "submissions" && <ProfilePage />) ||
+          (activeItem === "bookmarks" && <ProfilePage />) ||
           <div>Content not found</div>
         }
       </div>
