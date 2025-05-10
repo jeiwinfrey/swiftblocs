@@ -1,24 +1,66 @@
 import React from 'react';
+import { ComponentCard } from "@/components/layout/component-card";
 
 export default function HomePage() {
+  // Sample component data
+  const sampleComponents = [
+    {
+      title: "Animated Button",
+      authorName: "Sarah Chen",
+      viewsCount: 1254,
+      bookmarksCount: 87,
+      imageUrl: "/samples/component1.jpg"
+    },
+    {
+      title: "Responsive Card Grid",
+      authorName: "Michael Wong",
+      viewsCount: 843,
+      bookmarksCount: 62,
+      imageUrl: "/samples/component2.jpg"
+    },
+    {
+      title: "Navigation Menu",
+      authorName: "Alex Johnson",
+      viewsCount: 1876,
+      bookmarksCount: 124,
+      imageUrl: "/samples/component3.jpg"
+    },
+    {
+      title: "Form Input Group",
+      authorName: "Jamie Lee",
+      viewsCount: 632,
+      bookmarksCount: 41,
+      imageUrl: "/samples/component4.jpg"
+    },
+    {
+      title: "Modal Dialog",
+      authorName: "Chris Taylor",
+      viewsCount: 1432,
+      bookmarksCount: 93,
+      imageUrl: "/samples/component5.jpg"
+    },
+    {
+      title: "Data Table",
+      authorName: "Pat Smith",
+      viewsCount: 2145,
+      bookmarksCount: 156,
+      imageUrl: "/samples/component6.jpg"
+    }
+  ];
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Welcome to SwiftBlocs</h1>
-      <p className="mb-4">Your platform for discovering and creating amazing content blocks.</p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        <div className="border rounded-lg p-4 shadow-sm">
-          <h2 className="text-lg font-semibold mb-2">Discover Components</h2>
-          <p>Browse our library of ready-to-use components.</p>
-        </div>
-        <div className="border rounded-lg p-4 shadow-sm">
-          <h2 className="text-lg font-semibold mb-2">Meet Creators</h2>
-          <p>Connect with talented creators in our community.</p>
-        </div>
-        <div className="border rounded-lg p-4 shadow-sm">
-          <h2 className="text-lg font-semibold mb-2">Latest Submissions</h2>
-          <p>Check out the newest components submitted by our community.</p>
-        </div>
+    <div className="container mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        {sampleComponents.map((component, index) => (
+          <ComponentCard 
+            key={index}
+            title={component.title}
+            authorName={component.authorName}
+            viewsCount={component.viewsCount}
+            bookmarksCount={component.bookmarksCount}
+            imageUrl={component.imageUrl}
+          />
+        ))}
       </div>
     </div>
   );
