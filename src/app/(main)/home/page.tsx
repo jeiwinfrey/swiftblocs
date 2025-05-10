@@ -5,43 +5,37 @@ export default function HomePage() {
   // Sample component data
   const sampleComponents = [
     {
-      title: "Animated Button",
-      authorName: "Sarah Chen",
+      componentTitle: "Animated Button",
       viewsCount: 1254,
       bookmarksCount: 87,
       imageUrl: "/samples/component1.jpg"
     },
     {
-      title: "Responsive Card Grid",
-      authorName: "Michael Wong",
+      componentTitle: "Responsive Card Grid",
       viewsCount: 843,
       bookmarksCount: 62,
       imageUrl: "/samples/component2.jpg"
     },
     {
-      title: "Navigation Menu",
-      authorName: "Alex Johnson",
+      componentTitle: "Navigation Menu",
       viewsCount: 1876,
       bookmarksCount: 124,
       imageUrl: "/samples/component3.jpg"
     },
     {
-      title: "Form Input Group",
-      authorName: "Jamie Lee",
+      componentTitle: "Form Input Group",
       viewsCount: 632,
       bookmarksCount: 41,
       imageUrl: "/samples/component4.jpg"
     },
     {
-      title: "Modal Dialog",
-      authorName: "Chris Taylor",
+      componentTitle: "Modal Dialog",
       viewsCount: 1432,
       bookmarksCount: 93,
       imageUrl: "/samples/component5.jpg"
     },
     {
-      title: "Data Table",
-      authorName: "Pat Smith",
+      componentTitle: "Data Table",
       viewsCount: 2145,
       bookmarksCount: 156,
       imageUrl: "/samples/component6.jpg"
@@ -50,12 +44,11 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {sampleComponents.map((component, index) => (
           <ComponentCard 
             key={index}
-            title={component.title}
-            authorName={component.authorName}
+            componentTitle={component.componentTitle}
             viewsCount={component.viewsCount}
             bookmarksCount={component.bookmarksCount}
             imageUrl={component.imageUrl}

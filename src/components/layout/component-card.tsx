@@ -4,8 +4,7 @@ import { BookmarkIcon, EyeIcon } from "lucide-react"
 import Image from "next/image"
 
 interface ComponentCardProps {
-    title?: string;
-    authorName?: string;
+    componentTitle?: string;
     authorAvatar?: string;
     viewsCount?: number;
     bookmarksCount?: number;
@@ -14,8 +13,7 @@ interface ComponentCardProps {
 }
 
 export function ComponentCard({
-    title = "Component Title",
-    authorName = "Creator Name",
+    componentTitle = "Component Title",
     authorAvatar = "",
     viewsCount = 0,
     bookmarksCount = 0,
@@ -29,7 +27,7 @@ export function ComponentCard({
                 {imageUrl ? (
                     <Image 
                         src={imageUrl} 
-                        alt={title} 
+                        alt={componentTitle} 
                         fill
                         className="object-cover"
                     />
@@ -42,23 +40,19 @@ export function ComponentCard({
             
             {/* Component Info */}
             <div>
-                <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-sm truncate">{title}</h3>
-                </div>
-                
                 {/* Author, Views and Bookmarks */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Avatar className="size-6">
                             {authorAvatar ? (
-                                <AvatarImage src={authorAvatar} alt={authorName} />
+                                <AvatarImage src={authorAvatar} alt={componentTitle} />
                             ) : (
                                 <AvatarFallback className="text-xs">
-                                    {authorName.slice(0, 2).toUpperCase()}
+                                    {componentTitle.slice(0, 2).toUpperCase()}
                                 </AvatarFallback>
                             )}
                         </Avatar>
-                        <span className="text-xs text-muted-foreground truncate max-w-[100px]">{authorName}</span>
+                        <span className="text-xs text-muted-foreground truncate max-w-[100px]">{componentTitle}</span>
                     </div>
                     
                     <div className="flex items-center gap-3">
