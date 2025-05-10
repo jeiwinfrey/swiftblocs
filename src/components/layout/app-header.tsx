@@ -3,9 +3,9 @@ import { useState } from "react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { UserAvatar } from "@/components/layout/user-avatar"
 
-export function MainContent() {
+export function AppHeader() {
   const { activeItem } = useSidebar();
   const [isLoggedIn] = useState(true); // Set to false or true
   
@@ -34,10 +34,7 @@ export function MainContent() {
             </div>
             <ThemeToggle />
             {isLoggedIn ? (
-              <Avatar className="outline-2 outline-ring">
-                <AvatarImage src="https://github.com/jeiwinfrey" />
-                <AvatarFallback>J</AvatarFallback>
-              </Avatar>
+              <UserAvatar />
             ) : (
               <div>
                 <Button variant="secondary" size="sm">Sign Up</Button>
