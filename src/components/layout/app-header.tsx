@@ -7,7 +7,7 @@ import { UserAvatar } from "@/components/layout/user-avatar"
 
 export function AppHeader() {
   const { activeItem } = useSidebar();
-  const [isLoggedIn] = useState(true); // Set to false or true
+  const [isLoggedIn] = useState(false); // Set to false or true
   
   return (
     <main 
