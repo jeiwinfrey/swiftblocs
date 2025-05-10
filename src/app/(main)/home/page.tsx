@@ -21,7 +21,6 @@ type Component = {
 
 export default function HomePage() {
   const [components, setComponents] = useState<Component[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchComponents() {
@@ -39,8 +38,6 @@ export default function HomePage() {
         setComponents(data || []);
       } catch (error) {
         console.error('Error:', error);
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -56,14 +53,8 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto">
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <p>Loading components...</p>
-        </div>
-      ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {componentsWithImageUrls.length > 0 ? (
-            componentsWithImageUrls.map((component) => (
+          {componentsWithImageUrls.length > 0 && componentsWithImageUrls.map((component) => (
               <ComponentCard 
                 key={component.id}
                 componentTitle={component.component_title}
@@ -72,14 +63,8 @@ export default function HomePage() {
                 imageUrl={component.imageUrl}
                 authorAvatar="" // You can add author avatars later
               />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10">
-              <p className="text-muted-foreground">No components found. Import the sample data to get started.</p>
-            </div>
-          )}
-        </div>
-      )}
+            ))}
+      </div>
     </div>
   );
 }
