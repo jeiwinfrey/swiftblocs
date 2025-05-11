@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserAvatar } from "@/components/layout/user-avatar"
 import { ContentRouter } from "./routing"
+import { useRouter } from "next/navigation"
 
 export function AppHeader() {
   const [isLoggedIn] = useState(true); // Set to false or true
+  const router = useRouter();
   
   return (
     <main 
@@ -36,7 +38,7 @@ export function AppHeader() {
             <ThemeToggle />
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm">Add New</Button>
+                <Button variant="outline" size="sm" onClick={() => router.push("/publish")}>Add New</Button>
                 <UserAvatar />
               </div>
             ) : (
