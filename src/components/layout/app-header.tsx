@@ -8,7 +8,7 @@ import { UserAvatar } from "@/components/layout/user-avatar"
 import { ContentRouter } from "./routing"
 
 export function AppHeader() {
-  const [isLoggedIn] = useState(false); // Set to false or true
+  const [isLoggedIn] = useState(true); // Set to false or true
   
   return (
     <main 
@@ -23,7 +23,7 @@ export function AppHeader() {
     >
       <div style={{ borderBottom: "1px solid var(--sidebar-border)", padding: "2px", width: "100%" }}>
         <div style={{ padding: "4px 8px 8px 8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div className="flex items-center gap-2" style={{ flexGrow: 1 }}>
+          <div className="flex items-center gap-1" style={{ flexGrow: 1 }}>
             <SidebarTrigger />
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "400px", height: "32px", maxWidth: "100%", margin: "0 auto" }}>
               <Button variant="outline" style={{ width: "100%", height: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: "12px", paddingRight: "8px" }}>
@@ -35,7 +35,10 @@ export function AppHeader() {
             </div>
             <ThemeToggle />
             {isLoggedIn ? (
-              <UserAvatar />
+              <div className="flex items-center gap-3">
+                <Button variant="outline" size="sm">Add New</Button>
+                <UserAvatar />
+              </div>
             ) : (
               <div>
                 <Button variant="secondary" size="sm">Sign Up</Button>
