@@ -25,6 +25,11 @@ const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'),
   loading: () => <HomePageSkeleton /> // Using the same skeleton for now
 });
 
+const PublishPage = dynamic(() => import('@/app/(main)/publish/page'), { 
+  ssr: false, 
+  loading: () => <HomePageSkeleton /> // Using the same skeleton for now
+});
+
 export function ContentRouter() {
   const { activeItem } = useSidebar();
   
@@ -35,6 +40,7 @@ export function ContentRouter() {
         (activeItem === "creators" && <CreatorsPage />) ||
         (activeItem === "submissions" && <ProfilePage />) ||
         (activeItem === "bookmarks" && <ProfilePage />) ||
+        (activeItem === "publish" && <PublishPage />) ||
         <div>Content not found</div>
       }
     </div>
