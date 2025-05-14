@@ -58,10 +58,10 @@ export default function HomePage() {
               <ComponentCard 
                 key={component.id}
                 componentTitle={component.component_title}
+                author={component.author}
                 viewsCount={component.views_count}
                 bookmarksCount={component.bookmarks_count}
                 imageUrl={component.imageUrl}
-                authorAvatar="" // You can add author avatars later
               />
             ))}
       </div>
