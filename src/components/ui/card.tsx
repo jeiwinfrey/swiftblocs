@@ -7,7 +7,7 @@ const cardVariants = cva("w-full relative", {
     variant: {
       inner: [
         "border-[0.5px] rounded-md p-1",
-        "border-zinc-300 dark:border-zinc-800",
+        "border-border",
       ],
     },
   },
@@ -38,12 +38,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const content = (
       <CardContent>
         {title && (
-          <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-gray-100">
+          <h3 className="text-lg font-bold mb-1 text-foreground">
             {title}
           </h3>
         )}
         {description && (
-          <p className="text-gray-700 dark:text-gray-300">{description}</p>
+          <p className="text-muted-foreground">{description}</p>
         )}
         {children}
       </CardContent>
@@ -55,7 +55,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(cardVariants({ variant, className }))}
         {...props}
       >
-        <div className="rounded-md bg-gradient-to-br from-white to-zinc-200/60 dark:border dark:from-zinc-950 dark:to-zinc-900/60 dark:border-zinc-900/50 dark:shadow-inner">
+        <div className="rounded-md bg-card text-card-foreground">
           {content}
         </div>
       </div>

@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
 import { useSidebar, SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { UserAvatar } from "@/components/layout/user-avatar"
 import { ContentRouter } from "./routing"
+import Link from "next/link"
+import { useAuth } from "@/components/auth/auth-provider"
 
 export function AppHeader() {
-  const [isLoggedIn] = useState(true); // Set to false or true
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
   const { setActiveItem } = useSidebar();
   
-  return (
+  return (  
     <main 
       style={{ 
         flex: 1, 
@@ -47,8 +49,13 @@ export function AppHeader() {
                 <UserAvatar />
               </div>
             ) : (
-              <div>
-                <Button variant="secondary" size="sm">Sign Up</Button>
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <Button variant="ghost" size="sm">Log In</Button>
+                </Link>
+                <Link href="/signup">
+                  <Button variant="secondary" size="sm">Sign Up</Button>
+                </Link>
               </div>
             )}
           </div>
