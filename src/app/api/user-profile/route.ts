@@ -1,18 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase Admin client with service role key for admin operations
-// This should only be used server-side
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-);
+import { createServerSupabaseClient } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,6 +11,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 });
     }
 
+    // Create a server-side Supabase client with admin privileges
+    const supabaseAdmin = createServerSupabaseClient();
+
     // First, try to find the user by matching the username in user_metadata
     const { data: users, error } = await supabaseAdmin.auth.admin.listUsers();
 
@@ -32,13 +23,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Find the user with matching username in metadata
-    const user = users.users.find(u => 
+    const user = users.users.find((u: User) => 
       u.user_metadata?.username?.toLowerCase() === username.toLowerCase()
     );
 
     if (!user) {
       // If no user found with that username, try to match by email prefix
-      const possibleUser = users.users.find(u => 
+      const possibleUser = users.users.find((u: User) => 
         u.email?.split('@')[0].toLowerCase() === username.toLowerCase()
       );
 

@@ -29,11 +29,6 @@ export default function LoginPage() {
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Sign In</CardTitle>
-            <CardDescription>Choose your preferred sign in method</CardDescription>
-          </CardHeader>
-          
           <CardContent>
             {error && (
               <Alert variant="destructive" className="mb-4">

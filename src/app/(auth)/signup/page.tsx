@@ -49,7 +49,8 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // Redirect directly to home page after email verification
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             username, // Store username in user metadata
           },
@@ -89,12 +90,7 @@ export default function SignupPage() {
           <p className="text-sm text-muted-foreground">Sign up to start using SwiftBlocs</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Sign Up</CardTitle>
-            <CardDescription>Choose your preferred sign up method</CardDescription>
-          </CardHeader>
-          
+        <Card>        
           <CardContent>
             {error && (
               <Alert variant="destructive" className="mb-4">
