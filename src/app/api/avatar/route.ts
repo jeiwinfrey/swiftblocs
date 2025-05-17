@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     
     // Resize the image to 64x64 using sharp for bucket storage saving
     const resizedImageBuffer = await sharp(buffer)
-      .resize(64, 64, {
+      .resize(128, 128, {
         fit: 'cover',
         position: 'center'
       })

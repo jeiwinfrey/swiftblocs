@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ComponentForm } from "@/components/layout/component-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CheckCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { User } from "@supabase/supabase-js";
 
 const tags = [
   { value: "button", label: "Button" },
@@ -36,6 +38,17 @@ export default function PublishPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  // Get the current user on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    
+    fetchUser();
+  }, []);
   
   // State is managed and passed to the ComponentForm
   
@@ -55,6 +68,11 @@ export default function PublishPage() {
         throw new Error('Your code must start with "import SwiftUI"');
       }
       
+      // Validate that user is logged in
+      if (!user) {
+        throw new Error('You must be logged in to publish a component');
+      }
+      
       // Create form data for file upload
       const formData = new FormData();
       formData.append('title', componentTitle);
@@ -62,6 +80,7 @@ export default function PublishPage() {
       formData.append('tag', selectedTag);
       formData.append('code', code);
       formData.append('image', imageFile);
+      formData.append('userId', user.id); // Add the user ID to the form data
       
       // Send data to API endpoint
       const response = await fetch('/api/components', {

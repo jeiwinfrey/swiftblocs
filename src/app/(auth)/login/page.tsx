@@ -1,89 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/auth/auth-provider";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Github, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useLoginForm } from "@/hooks/useLoginForm";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { user } = useAuth();
-  const [identifier, setIdentifier] = useState(""); // Can be email or username
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Redirect to home if already logged in
-  useEffect(() => {
-    if (user) {
-      router.push("/");
-    }
-  }, [user, router]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Check if identifier is an email or username
-      const isEmail = identifier.includes('@');
-      
-      let authResponse;
-      if (isEmail) {
-        // Login with email
-        authResponse = await supabase.auth.signInWithPassword({
-          email: identifier,
-          password,
-        });
-      } else {
-        // Login with username (using email format with domain)
-        // This is a workaround since Supabase doesn't natively support username login
-        // In a real app, you'd query your users table first to find the email associated with username
-        authResponse = await supabase.auth.signInWithPassword({
-          email: `${identifier}@users.swiftblocs.com`, // Using a fake domain
-          password,
-        });
-      }
-
-      if (authResponse.error) {
-        throw authResponse.error;
-      }
-
-      // Redirect to home page after successful login
-      router.push("/");
-      router.refresh();
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "An error occurred during login";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSocialLogin = async (provider: 'github' | 'google') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) throw error;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "An error occurred with social login";
-      setError(errorMessage);
-    }
-  };
+  const {
+    identifier,
+    setIdentifier,
+    password,
+    setPassword,
+    loading,
+    error,
+    handleCredentialsLogin,
+  } = useLoginForm();
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
@@ -107,39 +42,9 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-4">
-              {/* Social login buttons */}
-              <div className="grid grid-cols-2 gap-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={() => handleSocialLogin('github')}
-                >
-                  <Github className="mr-2 h-4 w-4" />
-                  GitHub
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={() => handleSocialLogin('google')}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
-                  Google
-                </Button>
-              </div>
-              
-              {/* Divider with OR text */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
               
               {/* Email/password form */}
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleCredentialsLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="identifier">Email or Username</Label>
                   <Input
@@ -148,6 +53,7 @@ export default function LoginPage() {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </div>
                 
@@ -168,6 +74,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={loading}
                   />
                 </div>
                 
@@ -185,7 +92,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link 
                 href="/signup" 
-                className="text-primary underline-offset-4 transition-colors hover:underline"
+                className={`text-primary underline-offset-4 transition-colors hover:underline ${loading ? 'pointer-events-none opacity-50' : ''}`}
               >
                 Sign up
               </Link>

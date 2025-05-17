@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Github, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function SignupPage() {
@@ -80,21 +79,7 @@ export default function SignupPage() {
     }
   };
 
-  const handleSocialSignup = async (provider: 'github' | 'google') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
 
-      if (error) throw error;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "An error occurred with social signup";
-      setError(errorMessage);
-    }
-  };
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
@@ -126,36 +111,6 @@ export default function SignupPage() {
             )}
             
             <div className="space-y-4">
-              {/* Social signup buttons */}
-              <div className="grid grid-cols-2 gap-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={() => handleSocialSignup('github')}
-                >
-                  <Github className="mr-2 h-4 w-4" />
-                  GitHub
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={() => handleSocialSignup('google')}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
-                  Google
-                </Button>
-              </div>
-              
-              {/* Divider with OR text */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
               
               {/* Signup form */}
               <form onSubmit={handleSignup} className="space-y-4">

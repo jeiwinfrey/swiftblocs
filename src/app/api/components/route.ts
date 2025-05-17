@@ -22,9 +22,6 @@ export async function POST(request: NextRequest) {
     // Initialize Supabase client with RLS bypass for server operations
     const supabase = createServerSupabaseClient();
     
-    // We're using RLS bypass, so we don't need to check for a session
-    // In a production app, you might want to check for a valid session anyway
-    console.log('Using admin privileges to bypass RLS');
     // Create a unique ID for the component
     const id = uuidv4();
     
@@ -35,14 +32,29 @@ export async function POST(request: NextRequest) {
     const tag = formData.get('tag') as string;
     const code = formData.get('code') as string;
     const image = formData.get('image') as File;
+    const userId = formData.get('userId') as string; // Get userId from form data
     
     // Validate required fields
-    if (!title || !description || !tag || !code || !image) {
+    if (!title || !description || !tag || !code || !image || !userId) {
       return NextResponse.json(
         { message: 'Missing required fields' },
         { status: 400 }
       );
     }
+    
+    // Get user data to extract username
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
+    
+    if (userError || !userData) {
+      console.error('Error fetching user data:', userError);
+      return NextResponse.json(
+        { message: 'Failed to authenticate user' },
+        { status: 401 }
+      );
+    }
+    
+    // Extract username from user metadata or use userId as fallback
+    const username = userData.user?.user_metadata?.username || userId;
     
     // Generate unique filename for the image
     const fileExtension = image.name.split('.').pop() || '';
@@ -74,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Create component object for Supabase
     const component: Component = {
       id,
-      author: 'jeiwin',
+      author: username, // Use the extracted username instead of hardcoded value
       component_title: title,
       description,
       views_count: 0,

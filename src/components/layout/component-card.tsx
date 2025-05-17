@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 
 interface ComponentCardProps {
-    componentTitle?: string;
+    componentTitle: string;
     author?: string;
     authorAvatar?: string;
     viewsCount?: number;
@@ -15,7 +15,7 @@ interface ComponentCardProps {
     className?: string;
 }
 
-export function ComponentCard({
+export const ComponentCard: React.FC<ComponentCardProps> = ({
     componentTitle = "Component Title",
     author = "",
     authorAvatar = "",
@@ -23,59 +23,74 @@ export function ComponentCard({
     bookmarksCount = 0,
     imageUrl = "",
     className = "",
-}: ComponentCardProps = {}) {
-    const [avatarUrl, setAvatarUrl] = useState(authorAvatar);
-    const [authorInitials, setAuthorInitials] = useState("");
-    
-    // Fetch author's avatar from user metadata if not provided
+}) => {
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null); 
+    const [authorInitials, setAuthorInitials] = useState<string>("");
+
     useEffect(() => {
-        async function fetchAuthorAvatar() {
-            if (!author) return;
-            
-            try {
-                // Get the user data by username
-                const { data: userData, error } = await supabase
-                    .from('users')
-                    .select('id, metadata')
-                    .eq('username', author)
-                    .single();
-                
-                if (error) {
-                    console.log('Error fetching user data:', error);
-                    throw error;
+        const fetchOrUseAvatar = async () => {
+            if (authorAvatar) {
+                if (authorAvatar.startsWith('http')) {
+                    try {
+                        const response = await fetch(authorAvatar);
+                        if (response.ok) {
+                            setAvatarUrl(authorAvatar);
+                            setAuthorInitials("");
+                            return; 
+                        } else {
+                            setAvatarUrl(null); 
+                        }
+                    } catch {
+                        setAvatarUrl(null); 
+                    }
                 }
-                
-                if (userData?.metadata?.avatar_url) {
-                    // Add a cache-busting parameter to force refresh
-                    const cacheBuster = `?t=${Date.now()}`;
-                    setAvatarUrl(userData.metadata.avatar_url + cacheBuster);
-                    return;
-                }
-                
-                // Direct approach - try to get the latest avatar from storage
-                // This is a fallback if the metadata approach doesn't work
-                const { data: publicUrlData } = supabase.storage
-                    .from('avatars')
-                    .getPublicUrl(`${author}-avatar.png`);
-                
-                if (publicUrlData?.publicUrl) {
-                    const cacheBuster = `?t=${Date.now()}`;
-                    setAvatarUrl(publicUrlData.publicUrl + cacheBuster);
-                    return;
-                }
-                
-                // If no avatar found, set initials
-                setAuthorInitials(author.slice(0, 2).toUpperCase());
-            } catch (err) {
-                console.error('Error fetching author avatar:', err);
-                setAuthorInitials(author.slice(0, 2).toUpperCase());
             }
-        }
-        
-        if (!avatarUrl) {
-            fetchAuthorAvatar();
-        }
-    }, [author, avatarUrl]);
+
+            if (!author) {
+                setAuthorInitials('??');
+                setAvatarUrl(null);
+                return;
+            }
+
+            const { data: publicUrlData } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(`${author}-avatar.png`);
+
+            if (publicUrlData && publicUrlData.publicUrl) {
+                try {
+                    const response = await fetch(publicUrlData.publicUrl);
+                    if (response.ok) {
+                        setAvatarUrl(publicUrlData.publicUrl);
+                        setAuthorInitials("");
+                    } else {
+                        setAvatarUrl(null);
+                        const nameParts = author.split(' ');
+                        const initials = nameParts.length > 1
+                          ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
+                          : nameParts[0].substring(0, 2);
+                        setAuthorInitials(initials.toUpperCase());
+                    }
+                } catch {
+                    setAvatarUrl(null);
+                    const nameParts = author.split(' ');
+                    const initials = nameParts.length > 1
+                      ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
+                      : nameParts[0].substring(0, 2);
+                    setAuthorInitials(initials.toUpperCase());
+                }
+            } else {
+                setAvatarUrl(null);
+                const nameParts = author.split(' ');
+                const initials = nameParts.length > 1
+                  ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
+                  : nameParts[0].substring(0, 2);
+                setAuthorInitials(initials.toUpperCase());
+            }
+        };
+
+        fetchOrUseAvatar();
+    }, [author, authorAvatar]); 
+
     return (
         <Card variant="inner" className={`max-w-[400px] bg-background overflow-hidden rounded-md ${className}`}>
             {/* Component Preview Image */}
