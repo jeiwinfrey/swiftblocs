@@ -4,54 +4,43 @@ import { BookmarkIcon, EyeIcon } from "lucide-react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
+import { ComponentCardProps } from "@/types/component"
 
-interface ComponentCardProps {
-    componentTitle: string;
-    author?: string;
-    authorAvatar?: string;
-    viewsCount?: number;
-    bookmarksCount?: number;
-    imageUrl?: string;
-    className?: string;
+/**
+ * Generates initials from a name
+ * @param name The name to generate initials from
+ * @returns The initials
+ */
+function generateInitials(name: string): string {
+  if (!name) return '??';
+  
+  const nameParts = name.split(' ');
+  const initials = nameParts.length > 1
+    ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
+    : nameParts[0].substring(0, 2);
+  return initials.toUpperCase();
 }
 
 export const ComponentCard: React.FC<ComponentCardProps> = ({
     componentTitle = "Component Title",
     author = "",
-    authorAvatar = "",
     viewsCount = 0,
     bookmarksCount = 0,
     imageUrl = "",
-    className = "",
+    onClick, // Will be used for navigation to component details
 }) => {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null); 
     const [authorInitials, setAuthorInitials] = useState<string>("");
 
     useEffect(() => {
-        const fetchOrUseAvatar = async () => {
-            if (authorAvatar) {
-                if (authorAvatar.startsWith('http')) {
-                    try {
-                        const response = await fetch(authorAvatar);
-                        if (response.ok) {
-                            setAvatarUrl(authorAvatar);
-                            setAuthorInitials("");
-                            return; 
-                        } else {
-                            setAvatarUrl(null); 
-                        }
-                    } catch {
-                        setAvatarUrl(null); 
-                    }
-                }
-            }
-
+        const fetchAvatar = async () => {
             if (!author) {
                 setAuthorInitials('??');
                 setAvatarUrl(null);
                 return;
             }
 
+            // Try to get avatar from Supabase storage
             const { data: publicUrlData } = supabase.storage
                 .from('avatars')
                 .getPublicUrl(`${author}-avatar.png`);
@@ -64,35 +53,27 @@ export const ComponentCard: React.FC<ComponentCardProps> = ({
                         setAuthorInitials("");
                     } else {
                         setAvatarUrl(null);
-                        const nameParts = author.split(' ');
-                        const initials = nameParts.length > 1
-                          ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
-                          : nameParts[0].substring(0, 2);
-                        setAuthorInitials(initials.toUpperCase());
+                        setAuthorInitials(generateInitials(author));
                     }
                 } catch {
                     setAvatarUrl(null);
-                    const nameParts = author.split(' ');
-                    const initials = nameParts.length > 1
-                      ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
-                      : nameParts[0].substring(0, 2);
-                    setAuthorInitials(initials.toUpperCase());
+                    setAuthorInitials(generateInitials(author));
                 }
             } else {
                 setAvatarUrl(null);
-                const nameParts = author.split(' ');
-                const initials = nameParts.length > 1
-                  ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`
-                  : nameParts[0].substring(0, 2);
-                setAuthorInitials(initials.toUpperCase());
+                setAuthorInitials(generateInitials(author));
             }
         };
 
-        fetchOrUseAvatar();
-    }, [author, authorAvatar]); 
+        fetchAvatar();
+    }, [author]); 
 
     return (
-        <Card variant="inner" className={`max-w-[400px] bg-background overflow-hidden rounded-md ${className}`}>
+        <Card 
+            variant="inner" 
+            className="max-w-[400px] bg-background overflow-hidden rounded-md"
+            onClick={onClick}
+        >
             {/* Component Preview Image */}
             <div className="relative w-full h-40 bg-muted rounded-sm">
                 {imageUrl ? (
