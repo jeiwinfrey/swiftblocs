@@ -30,6 +30,7 @@ export default function HomePage() {
         <HomePageSkeleton />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+<<<<<<< HEAD
           {components.length > 0 && components.map((component) => (
             <ComponentCard 
               key={component.id}
@@ -42,6 +43,19 @@ export default function HomePage() {
           ))}
         </div>
       )}
+=======
+          {componentsWithImageUrls.length > 0 && componentsWithImageUrls.map((component) => (
+              <ComponentCard 
+                key={component.id}
+                componentTitle={component.component_title}
+                author={component.author}
+                viewsCount={component.views_count}
+                bookmarksCount={component.bookmarks_count}
+                imageUrl={component.imageUrl}
+              />
+            ))}
+      </div>
+>>>>>>> develop
     </div>
   );
 }

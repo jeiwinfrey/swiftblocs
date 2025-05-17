@@ -12,11 +12,21 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// For server-side usage, you can create a new client instance
+// For server-side usage with service role key to bypass RLS
 export function createServerSupabaseClient() {
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  // Use the service role key for admin operations
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseServiceKey) {
+    console.warn('Missing SUPABASE_SERVICE_ROLE_KEY, falling back to anon key');
+    return createClient(supabaseUrl, supabaseAnonKey);
+  }
+  
+  // Create a client with the service role key
+  return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
-      persistSession: false
+      persistSession: false,
+      autoRefreshToken: false
     }
   });
 }
