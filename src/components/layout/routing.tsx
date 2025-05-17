@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useSidebar } from "@/components/ui/sidebar";
-import { HomePageSkeleton } from "./home-page-skeleton";
+import { HomePageSkeleton } from "./skeletons/home-page-skeleton";
 
 // Dynamically import page components with suspense and ssr disabled
 const HomePage = dynamic(() => import('@/app/(main)/home/page'), { 
