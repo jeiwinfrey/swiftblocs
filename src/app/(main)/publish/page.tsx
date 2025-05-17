@@ -75,8 +75,8 @@ export default function PublishPage() {
           <div className="md:w-1/2 pl-0 md:pl-0 mt-8 md:mt-0 md:-ml-10 relative z-10 flex flex-col flex-grow">
             <textarea
               id="code-input"
-              className="w-full flex-grow min-h-[400px] p-6 font-mono text-sm bg-secondary/30 border-0 rounded-none rounded-tr-lg focus:outline-none focus:ring-0 resize-none"
-              placeholder="// Paste your SwiftUI code here"
+              className="w-full flex-grow min-h-[400px] pt-7 pr-5 pb-7 pl-15 font-mono text-sm bg-secondary/30 border-0 rounded-none rounded-tr-lg focus:outline-none focus:ring-0 resize-none"
+              placeholder={`import SwiftUI\n\nstruct ContentView: View {\n    var body: some View {\n        Text(\"Hello, SwiftUI!\")\n            .font(.title)\n            .foregroundColor(.blue)\n    }\n}\n\nstruct ContentView_Previews: PreviewProvider {\n    static var previews: some View {\n        ContentView()\n    }\n}`}
               value={code}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCode(e.target.value)}
               required
