@@ -58,7 +58,7 @@ export default function ComponentsPage() {
 
   return (
     <div className="container mx-auto px-1 overflow-y-auto overflow-x-hidden scrollbar-hide h-full">
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-4">
         <Button 
           variant={sortOption === 'newest' ? "default" : "outline"} 
           size="sm" 

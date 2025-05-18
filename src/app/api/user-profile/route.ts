@@ -48,6 +48,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       id: user.id,
       username: user.user_metadata?.username || user.email?.split('@')[0],
+      display_name: user.user_metadata?.display_name || null,
+      bio: user.user_metadata?.bio || null,
       avatar_url: user.user_metadata?.avatar_url || null
     });
   } catch (error) {
