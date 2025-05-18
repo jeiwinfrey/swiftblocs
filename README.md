@@ -12,7 +12,7 @@ SwiftBlocs is a platform for sharing and discovering SwiftUI components. It allo
 ## Tech Stack
 
 - **Frontend**: Next.js, React, TypeScript
-- **Styling**: CSS variables with OKLCH color format
+- **Styling**: CSS variables with OKLCH color format, and TailwindCSS
 - **Authentication**: Supabase Auth (email/password)
 - **Database**: Supabase PostgreSQL
 - **Storage**: Supabase Storage for avatars and component images
