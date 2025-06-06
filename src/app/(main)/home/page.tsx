@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ComponentCard } from "@/components/layout/component-card";
+import { ComponentDetails } from "@/components/layout/component-details";
 import { HomePageSkeleton } from "@/components/layout/skeletons/home-page-skeleton";
 import { getComponents, type Component } from "@/services/supabase/components";
 import { COMPONENT_TAGS } from "@/constants/tags";
@@ -12,6 +13,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [components, setComponents] = useState<Component[]>([]);
   const [componentsByTag, setComponentsByTag] = useState<Record<string, Component[]>>({});
+  const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     async function fetchComponents() {
@@ -64,7 +67,12 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container mx-auto pl-2 overflow-y-auto overflow-x-hidden">
+    <div className="container mx-auto px-1 overflow-y-auto overflow-x-hidden scrollbar-hide h-full">
+      <ComponentDetails 
+        component={selectedComponent}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+      />
       {loading ? (
         <HomePageSkeleton />
       ) : (
@@ -88,6 +96,10 @@ export default function HomePage() {
                         viewsCount={component.views_count}
                         bookmarksCount={component.bookmarks_count}
                         imageUrl={component.imageUrl || ''}
+                        onClick={() => {
+                          setSelectedComponent(component);
+                          setDetailsOpen(true);
+                        }}
                       />
                     </div>
                   ))}

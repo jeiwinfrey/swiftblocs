@@ -26,12 +26,14 @@ export default function PublishPage() {
     setCode,
     imageFile,
     setImageFile,
+    imageUrl,
     isSubmitting,
     error,
     showSuccessDialog,
     setShowSuccessDialog,
     handleSubmit,
-    handleGoToHome
+    handleGoToHome,
+    isEditMode
   } = usePublishForm();
   
   return (
@@ -42,10 +44,10 @@ export default function PublishPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle className="h-6 w-6 text-green-500" />
-              Component Published
+              Component {isEditMode ? 'Updated' : 'Published'}
             </DialogTitle>
             <DialogDescription>
-              Your component has been successfully published and is now available on SwiftBlocs.
+              Your component has been successfully {isEditMode ? 'updated' : 'published'} and is now available on SwiftBlocs.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4">
@@ -68,7 +70,9 @@ export default function PublishPage() {
             setSelectedTag={setSelectedTag}
             imageFile={imageFile}
             setImageFile={setImageFile}
+            imageUrl={imageUrl}
             tags={COMPONENT_TAGS}
+            isEditMode={isEditMode}
           />
           
           {/* Right side - Code */}
@@ -90,7 +94,7 @@ export default function PublishPage() {
                   className="px-8" 
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Publishing...' : 'Publish'}
+                  {isSubmitting ? (isEditMode ? 'Updating...' : 'Publishing...') : (isEditMode ? 'Update' : 'Publish')}
                 </Button>
               </div>
             </div>

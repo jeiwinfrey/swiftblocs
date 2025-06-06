@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useSidebar } from "@/components/ui/sidebar";
 import { HomePageSkeleton } from "./skeletons/home-page-skeleton";
+import { UserSubmissions } from "./user-submissions";
 
 // Dynamically import page components with suspense and ssr disabled
 const HomePage = dynamic(() => import('@/app/(main)/home/page'), { 
@@ -20,10 +21,8 @@ const CreatorsPage = dynamic(() => import('@/app/(main)/creators/page'), {
   loading: () => <HomePageSkeleton /> // Using the same skeleton for now
 });
 
-const ProfilePage = dynamic(() => import('@/app/(main)/profile-bookmarks/page'), { 
-  ssr: false, 
-  loading: () => <HomePageSkeleton /> // Using the same skeleton for now
-});
+// Use the existing client component directly
+const ProfilePage = UserSubmissions;
 
 const PublishPage = dynamic(() => import('@/app/(main)/publish/page'), { 
   ssr: false, 

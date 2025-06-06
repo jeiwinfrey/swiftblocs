@@ -17,7 +17,9 @@ export interface ComponentFormProps {
   setSelectedTag: (value: string) => void;
   imageFile: File | null;
   setImageFile: (file: File | null) => void;
+  imageUrl?: string | null;
   tags: Array<{ value: string; label: string }>;
+  isEditMode?: boolean;
 }
 
 export function ComponentForm({
@@ -29,7 +31,9 @@ export function ComponentForm({
   setSelectedTag,
   imageFile,
   setImageFile,
-  tags
+  imageUrl,
+  tags,
+  isEditMode = false
 }: ComponentFormProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -107,7 +111,8 @@ export function ComponentForm({
         <div className="space-y-1">
           <div className="flex items-center">
             <Label htmlFor="image" className="font-medium">Cover Image</Label>
-            <span className="text-red-400 ml-1">*</span>
+            <span className="text-red-400 ml-1">{!isEditMode && '*'}</span>
+            {isEditMode && <span className="text-xs ml-2 text-muted-foreground">(Optional when editing)</span>}
           </div>
           <div className="border-2 border-dashed border-border rounded-lg p-8 text-center bg-background/80">
             <div className="flex flex-col items-center justify-center">
@@ -134,6 +139,34 @@ export function ComponentForm({
                     >
                       Change image
                     </Button>
+                  </div>
+                </div>
+              ) : imageUrl ? (
+                <div className="space-y-4 w-full">
+                  <div className="relative w-full h-48 rounded-md overflow-hidden bg-secondary/30">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {/* Existing image preview */}
+                      <Image 
+                        src={imageUrl} 
+                        alt="Current image" 
+                        className="w-full h-full object-contain"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">Current image</p>
+                    <label htmlFor="image" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2 cursor-pointer">
+                      Replace image
+                    </label>
+                    <FileInput
+                      id="image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
                   </div>
                 </div>
               ) : (

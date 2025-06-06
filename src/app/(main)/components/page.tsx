@@ -5,6 +5,7 @@ import { ComponentCard } from "@/components/layout/component-card";
 import { getComponents, type Component } from "@/services/supabase/components";
 import { Button } from "@/components/ui/button";
 import { ComponentPageSkeleton } from "@/components/layout/skeletons/component-page-skeleton";
+import { ComponentDetails } from "@/components/layout/component-details";
 
 type SortOption = 'newest' | 'oldest' | 'most-viewed' | 'most-bookmarked';
 
@@ -13,6 +14,8 @@ export default function ComponentsPage() {
   const [components, setComponents] = useState<Component[]>([]);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [originalComponents, setOriginalComponents] = useState<Component[]>([]);
+  const [selectedComponent, setSelectedComponent] = useState<Component | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     async function fetchComponents() {
@@ -58,6 +61,11 @@ export default function ComponentsPage() {
 
   return (
     <div className="container mx-auto px-1 overflow-y-auto overflow-x-hidden scrollbar-hide h-full">
+      <ComponentDetails 
+        component={selectedComponent}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+      />
       <div className="flex flex-wrap gap-2 mb-4">
         <Button 
           variant={sortOption === 'newest' ? "default" : "outline"} 
@@ -102,6 +110,10 @@ export default function ComponentsPage() {
                   viewsCount={component.views_count}
                   bookmarksCount={component.bookmarks_count}
                   imageUrl={component.imageUrl || ''}
+                  onClick={() => {
+                    setSelectedComponent(component);
+                    setDetailsOpen(true);
+                  }}
                 />
               </div>
             ))

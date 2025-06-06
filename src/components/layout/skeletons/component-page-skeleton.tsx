@@ -1,6 +1,6 @@
 "use client";
 
-import { ComponentCardSkeleton } from "../component-card-skeleton";
+import { ComponentCardSkeleton } from "./component-card-skeleton";
 
 export function ComponentPageSkeleton() {
   return (

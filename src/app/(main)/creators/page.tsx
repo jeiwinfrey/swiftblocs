@@ -4,12 +4,23 @@ import { useState, useEffect } from "react";
 import { CreatorCard } from "@/components/layout/creator-card";
 import { CreatorPageSkeleton } from "@/components/layout/skeletons/creator-page-skeleton";
 import { getCreatorsBasic, type Creator } from "@/services/supabase/creators";
+import { Component, getComponents } from "@/services/supabase/components";
+import { ProfileView } from "@/components/layout/profile-view";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default function CreatorsPage() {
+  // Creators list state
   const [loading, setLoading] = useState(true);
   const [creators, setCreators] = useState<Creator[]>([]);
   const [error, setError] = useState<string | null>(null);
+  
+  // Selected creator profile state
+  const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
+  const [creatorComponents, setCreatorComponents] = useState<Component[]>([]);
+  const [loadingProfile, setLoadingProfile] = useState(false);
 
+  // Fetch creators list
   useEffect(() => {
     async function fetchCreators() {
       try {
@@ -33,7 +44,73 @@ export default function CreatorsPage() {
 
     fetchCreators();
   }, []);
+  
+  // Fetch selected creator's components
+  useEffect(() => {
+    if (!selectedCreator) return;
+    
+    async function fetchCreatorComponents() {
+      setLoadingProfile(true);
+      try {
+        const allComponents = await getComponents();
+        const filteredComponents = allComponents.filter(
+          component => component.author === selectedCreator
+        );
+        setCreatorComponents(filteredComponents);
+      } catch (err) {
+        console.error(`Error fetching components for ${selectedCreator}:`, err);
+      } finally {
+        setLoadingProfile(false);
+      }
+    }
+    
+    fetchCreatorComponents();
+  }, [selectedCreator]);
+  
+  // Handle selecting a creator
+  const handleCreatorClick = (username: string) => {
+    setSelectedCreator(username);
+  };
+  
+  // Handle going back to creators list
+  const handleBackClick = () => {
+    setSelectedCreator(null);
+    setCreatorComponents([]);
+  };
 
+  // If a creator is selected, show their profile
+  if (selectedCreator) {
+    const creator = creators.find(c => c.username === selectedCreator);
+    
+    return (
+      <div className="container mx-auto px-1 overflow-y-auto overflow-x-hidden scrollbar-hide h-full">
+        <div className="mb-4">
+          <Button 
+            variant="ghost" 
+            className="flex items-center gap-1" 
+            onClick={handleBackClick}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to creators
+          </Button>
+        </div>
+        
+        {loadingProfile ? (
+          <CreatorPageSkeleton />
+        ) : (
+          <ProfileView
+            displayName={selectedCreator}
+            username={selectedCreator}
+            bio={creator?.bio || 'SwiftBlocs component creator'}
+            avatarUrl={undefined}
+            components={creatorComponents}
+          />
+        )}
+      </div>
+    );
+  }
+  
+  // Otherwise show the creators list
   return (
     <div className="container mx-auto px-1 overflow-y-auto overflow-x-hidden scrollbar-hide h-full">
       {error ? (
@@ -56,7 +133,7 @@ export default function CreatorsPage() {
                 componentCount={creator.componentCount}
                 totalViews={creator.totalViews}
                 totalBookmarks={creator.totalBookmarks}
-                onClick={() => console.log(`Navigate to ${creator.username}'s profile`)}
+                onClick={() => handleCreatorClick(creator.username)}
               />
             ))
           ) : (
