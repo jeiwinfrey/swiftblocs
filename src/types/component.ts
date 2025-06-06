@@ -27,6 +27,9 @@ export interface ComponentCardProps {
   bookmarksCount: number;
   imageUrl: string;
   onClick?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  showEditDelete?: boolean;
 }
 
 /**

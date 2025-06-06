@@ -156,8 +156,7 @@ export function ComponentSearchBar({
   const [selectedComponent, setSelectedComponent] = React.useState<DbComponent | null>(null);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
 
-  // Debounce search query if needed for performance with many components
-  // const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
 
   // Store the original database components for reference
   const [dbComponentsMap, setDbComponentsMap] = React.useState<Record<string, DbComponent>>({});
@@ -166,22 +165,20 @@ export function ComponentSearchBar({
     setIsLoading(true);
     setFetchError(null);
     try {
-      // Fetch components from the database using the Supabase service
       const dbComponents = await getComponents();
       
       // Create a map of components by ID for quick lookup
-      const componentsMap: Record<string, DbComponent> = {};
-      dbComponents.forEach(component => {
-        componentsMap[component.id] = component;
-      });
+      const componentsMap = Object.fromEntries(
+        dbComponents.map(component => [component.id, component])
+      );
       setDbComponentsMap(componentsMap);
       
-      // Map the database components to the SearchableComponent interface
-      const searchableComponents: SearchableComponent[] = dbComponents.map(component => ({
+      // Map to SearchableComponent interface
+      const searchableComponents = dbComponents.map(component => ({
         id: component.id,
         name: component.component_title,
-        tags: component.tags || [], // Use empty array if tags is null
-        previewImageUrl: component.imageUrl || '/placeholder-image.svg' // Use placeholder if imageUrl is not available
+        tags: component.tags || [],
+        previewImageUrl: component.imageUrl || '/placeholder-image.svg'
       }));
       
       setComponents(searchableComponents);
@@ -213,16 +210,20 @@ export function ComponentSearchBar({
   };
 
   const filteredComponents = React.useMemo(() => {
-    if (!searchQuery) return components; // Show all components when no search query
+    if (!searchQuery) return components;
+    
+    const query = searchQuery.toLowerCase();
     return components.filter(component =>
-      component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      component.name.toLowerCase().includes(query) ||
+      component.tags.some(tag => tag.toLowerCase().includes(query))
     );
   }, [searchQuery, components]);
 
   const tags = React.useMemo(() => {
     const allTags = new Set<string>();
-    components.forEach(component => component.tags.forEach(tag => allTags.add(tag)));
+    components.forEach(component => 
+      component.tags.forEach(tag => allTags.add(tag))
+    );
     return Array.from(allTags).sort();
   }, [components]);
 
@@ -319,11 +320,8 @@ export function ComponentSearchBar({
                       </CommandGroup>
                     )}
 
-                    {!isLoading && !fetchError && filteredComponents.length === 0 && searchQuery.length > 0 && (
-                      <CommandEmpty>No components found for &quot;{searchQuery}&quot;.</CommandEmpty>
-                    )}
                     {!isLoading && !fetchError && components.length === 0 && tags.length === 0 && (
-                        <CommandEmpty>No components or categories available.</CommandEmpty>
+                      <CommandEmpty>No components or categories available.</CommandEmpty>
                     )}
                   </>
                 )}

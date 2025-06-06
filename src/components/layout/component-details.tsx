@@ -25,36 +25,27 @@ export function ComponentDetails({
 }: ComponentDetailsProps) {
   const [copied, setCopied] = React.useState(false);
   const [bookmarked, setBookmarked] = React.useState(false);
-  const [localComponent, setLocalComponent] = React.useState<Component | null>(component);
-
-  React.useEffect(() => {
-    setLocalComponent(component);
-  }, [component]);
 
   // Copy code to clipboard
   const copyToClipboard = async () => {
-    if (!localComponent?.code) {
-      console.error('No code to copy');
-      return;
-    }
+    if (!component?.code) return;
 
     try {
-      await navigator.clipboard.writeText(localComponent.code);
+      await navigator.clipboard.writeText(component.code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Failed to copy code:', error);
+    } catch {
       // Fallback method for copying
       const textarea = document.createElement('textarea');
-      textarea.value = localComponent.code;
+      textarea.value = component.code;
       document.body.appendChild(textarea);
       textarea.select();
       try {
         document.execCommand('copy');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Fallback copy failed:', err);
+      } catch {
+        // Silent fail
       } finally {
         document.body.removeChild(textarea);
       }
@@ -67,7 +58,7 @@ export function ComponentDetails({
     // Here you would implement the actual bookmark functionality with your database
   };
 
-  if (!localComponent) {
+  if (!component) {
     return null;
   }
 
@@ -87,16 +78,16 @@ export function ComponentDetails({
         <div className="space-y-6">
           {/* Component title and description */}
           <div>
-            <h2 className="text-2xl font-bold">{localComponent.component_title}</h2>
-            <p className="text-sm text-muted-foreground mb-2">By {localComponent.author}</p>
-            <p className="text-sm">{localComponent.description}</p>
+            <h2 className="text-2xl font-bold">{component.component_title}</h2>
+            <p className="text-sm text-muted-foreground mb-2">By {component.author}</p>
+            <p className="text-sm">{component.description}</p>
           </div>
           
           {/* Component tags */}
           <div>
             <h3 className="text-sm font-medium mb-2">Tags</h3>
             <div className="flex flex-wrap gap-2">
-              {localComponent.tags?.map((tag, index) => (
+              {component.tags?.map((tag, index) => (
                 <span
                   key={index}
                   className="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium"
@@ -143,7 +134,7 @@ export function ComponentDetails({
             <div className="relative">
               <CodeBlock className="rounded-md border bg-transparent">
                 <CodeBlockCode 
-                  code={localComponent.code} 
+                  code={component.code} 
                   language="swift" 
                   theme="github-dark"
                 />

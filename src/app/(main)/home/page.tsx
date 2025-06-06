@@ -27,29 +27,17 @@ export default function HomePage() {
         // Group components by tag
         const grouped: Record<string, Component[]> = {};
         
-        // Initialize groups for each tag
+        // Initialize groups for each tag and add components to their groups
         COMPONENT_TAGS.forEach(tag => {
-          grouped[tag.value] = [];
+          grouped[tag.value] = data.filter(component => 
+            component.tags?.includes(tag.value)
+          );
         });
         
-        // Add components to their respective tag groups
-        data.forEach(component => {
-          if (component.tags && component.tags.length > 0) {
-            component.tags.forEach(tag => {
-              if (grouped[tag]) {
-                grouped[tag].push(component);
-              }
-            });
-          }
-        });
-        
-        // Filter out empty tag groups
-        const filteredGrouped: Record<string, Component[]> = {};
-        Object.keys(grouped).forEach(tag => {
-          if (grouped[tag].length > 0) {
-            filteredGrouped[tag] = grouped[tag];
-          }
-        });
+        // Keep only non-empty groups
+        const filteredGrouped = Object.fromEntries(
+          Object.entries(grouped).filter(([, components]) => components.length > 0)
+        );
         
         setComponentsByTag(filteredGrouped);
       } catch (error) {
@@ -64,17 +52,16 @@ export default function HomePage() {
 
   // Get the display name for a tag
   const getTagDisplayName = (tagValue: string): string => {
-    const tag = COMPONENT_TAGS.find(t => t.value === tagValue);
-    return tag ? tag.label : tagValue.charAt(0).toUpperCase() + tagValue.slice(1);
+    return COMPONENT_TAGS.find(t => t.value === tagValue)?.label || 
+      tagValue.charAt(0).toUpperCase() + tagValue.slice(1);
   };
   
   // Handle viewing all components of a specific tag
   const handleViewAllTag = (tagName: string) => {
     setActiveTag(tagName);
-    const filtered = components.filter(component => 
-      component.tags && component.tags.includes(tagName)
-    );
-    setFilteredComponents(filtered);
+    setFilteredComponents(components.filter(component => 
+      component.tags?.includes(tagName)
+    ));
   };
   
   // Go back to all tags view

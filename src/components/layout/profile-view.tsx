@@ -12,6 +12,9 @@ interface ProfileViewProps {
   bio: string;
   avatarUrl?: string;
   components: Component[];
+  onEditComponent?: (component: Component) => void;
+  onDeleteComponent?: (componentId: string) => void;
+  showEditDelete?: boolean;
 }
 
 export function generateInitials(name: string): string {
@@ -28,7 +31,10 @@ export function ProfileView({
   username,
   bio,
   avatarUrl,
-  components
+  components,
+  onEditComponent,
+  onDeleteComponent,
+  showEditDelete = false
 }: ProfileViewProps) {
   const [selectedComponent, setSelectedComponent] = React.useState<Component | null>(null);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
@@ -61,6 +67,7 @@ export function ProfileView({
             {components.map((component) => (
               <ComponentCard
                 key={component.id}
+                id={component.id}
                 componentTitle={component.component_title}
                 author={component.author}
                 viewsCount={component.views_count}
@@ -70,6 +77,9 @@ export function ProfileView({
                   setSelectedComponent(component);
                   setDetailsOpen(true);
                 }}
+                onEdit={onEditComponent && showEditDelete ? () => onEditComponent(component) : undefined}
+                onDelete={onDeleteComponent && showEditDelete ? () => onDeleteComponent(component.id) : undefined}
+                showEditDelete={showEditDelete}
               />
             ))}
           </div>

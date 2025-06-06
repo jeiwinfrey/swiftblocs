@@ -11,19 +11,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Upload, AlertCircle, Trash2 } from "lucide-react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Upload, AlertCircle, ArrowLeft } from "lucide-react"
+
 
 export default function AccountSettingsPage() {
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -131,23 +123,8 @@ export default function AccountSettingsPage() {
     }
   }
   
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  
-  const handleDeleteAccount = async () => {
-    try {
-      setLoading(true)
-      
-      // In a real app, you'd call a server endpoint to delete the user
-      // For now, we'll just sign out
-      await signOut()
-      router.push("/")
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to delete account"
-      setError(errorMessage)
-    } finally {
-      setLoading(false)
-      setShowDeleteDialog(false)
-    }
+  const handleBackToHome = () => {
+    router.push('/')
   };
   
   // Show loading state or redirect if not logged in
@@ -158,6 +135,16 @@ export default function AccountSettingsPage() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-gradient-to-b from-background to-background/80 py-10">
       <div className="mx-auto w-full max-w-md space-y-6 px-4 md:max-w-2xl">
+        <div className="flex items-center justify-between mb-4">
+          <Button 
+            variant="ghost" 
+            onClick={handleBackToHome} 
+            className="flex items-center gap-1 hover:bg-background/80 rounded-lg"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back</span>
+          </Button>
+        </div>
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">Profile</h1>
           <p className="text-sm text-muted-foreground mt-2">
@@ -281,59 +268,7 @@ export default function AccountSettingsPage() {
           </CardContent>
         </Card>
         
-        {/* Danger Zone */}
-        <Card className="border-destructive/30 shadow-lg rounded-xl overflow-hidden backdrop-blur-sm bg-card/80">
-          <CardHeader className="border-b border-destructive/10">
-            <CardTitle className="text-xl text-destructive">
-              Danger Zone
-            </CardTitle>
-            <CardDescription className="text-destructive/80">
-              Permanently delete your account and all associated data
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <div className="flex items-center justify-between gap-4 p-2 rounded-lg bg-destructive/5 border border-destructive/20">
-              <div className="pl-2">
-                <h3 className="font-medium text-sm">Delete your account</h3>
-                <p className="text-xs text-muted-foreground">This action cannot be undone</p>
-              </div>
-              <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="destructive" 
-                    className="rounded-lg font-medium shadow-lg hover:shadow-destructive/20 transition-all"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete Account
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="text-destructive">Delete Account</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to delete your account? This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="mt-4">
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setShowDeleteDialog(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      variant="destructive" 
-                      onClick={handleDeleteAccount}
-                      disabled={loading}
-                    >
-                      {loading ? "Deleting..." : "Delete Account"}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
     </div>
   )
